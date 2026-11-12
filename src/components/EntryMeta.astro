@@ -1,0 +1,58 @@
+---
+// The Elfie entry-meta line: Gravatar + author link, then the posted-on
+// date link with published + updated <time> elements. The .updated time
+// is hidden by the theme CSS, exactly as on live — it is still emitted
+// for parity. Dates render as "February 29, 2024" (long month); the
+// timeZone is UTC because pubDate is a calendar date, not an instant.
+interface Props {
+	slug: string;
+	pubDate: Date;
+	datePublished?: string;
+	updatedDate?: Date;
+	dateModified?: string;
+}
+
+const { slug, pubDate, datePublished, updatedDate, dateModified } = Astro.props;
+const fmt = (d: Date) =>
+	d.toLocaleDateString('en-US', {
+		timeZone: 'UTC',
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+	});
+const pubDt = datePublished ?? pubDate.toISOString();
+const updDt = dateModified ?? updatedDate?.toISOString();
+// The .updated time is emitted whenever a modified timestamp exists
+// (live renders it even when the modified DATE equals the published
+// date — e.g. elementor-1534, modified 2h after publishing on the
+// same day — so the condition is the presence of dateModified, not a
+// date comparison). The text uses the modified date.
+const updDate = updatedDate ?? (dateModified ? new Date(dateModified) : undefined);
+---
+
+<div class="entry-meta">
+	<span class="byline">
+		{' '}
+		<span class="author vcard">
+			<img
+				alt=""
+				src="/images/avatar-24.png"
+				srcset="/images/avatar-48.png 2x"
+				class="avatar avatar-24 photo"
+				height="24"
+				width="24"
+				decoding="async"
+			/><a class="url fn n" href="https://laviedezee.com/author/laviedezee/"
+				>Azeezah Goodwin</a
+			>
+		</span>
+	</span><span class="posted-on"
+		><a href={`https://laviedezee.com/${slug}/`} rel="bookmark"
+			><time class="entry-date published" datetime={pubDt}>{fmt(pubDate)}</time>{
+				dateModified && updDate && (
+					<time class="updated" datetime={updDt}>{fmt(updDate)}</time>
+				)
+			}</a
+		></span
+	>
+</div>

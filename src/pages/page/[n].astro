@@ -1,0 +1,44 @@
+---
+// Homepage pages 2–4. Same loop as page 1 (sticky first, then date
+// order); page 1 itself lives at / (index.astro), never at /page/1/.
+import { getCollection } from 'astro:content';
+import LoopPage from '../../components/LoopPage.astro';
+import { homeBodyClass, homeOrder, pageCount, pageOf } from '../../lib/loop';
+import { collectionGraph } from '../../lib/rankmath';
+
+export async function getStaticPaths() {
+	const all = homeOrder(await getCollection('blog'));
+	const total = pageCount(all);
+	return Array.from({ length: total - 1 }, (_, i) => ({
+		params: { n: String(i + 2) },
+		props: { page: i + 2, total },
+	}));
+}
+
+const { page, total } = Astro.props;
+const all = homeOrder(await getCollection('blog'));
+
+const HOME_DESCRIPTION =
+	'Faith-led wellness coaching for Christian women: vision, daily rhythms, and tracking woven into one stewardship practice. Start your Wellness Stewardship OS.';
+
+// Rank Math @graph (verbatim from live): paged home pages carry the
+// CollectionPage node for their own URL, with no SearchAction on the
+// WebSite node and no "Page N" suffix on the name.
+const jsonLd = collectionGraph(
+	`https://laviedezee.com/page/${page}/`,
+	'La Vie de Zee | Christian Wellness Coaching for Women',
+);
+---
+
+<LoopPage
+	pageTitle="La Vie de Zee | Christian Wellness Coaching for Women"
+	description={HOME_DESCRIPTION}
+	bodyClass={homeBodyClass(page)}
+	posts={pageOf(all, page)}
+	current={page}
+	total={total}
+	paginationBase="https://laviedezee.com/"
+	paginationKind="numbers"
+	isHome
+	jsonLd={jsonLd}
+/>

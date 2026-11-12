@@ -1,0 +1,8 @@
+files scanned: 65
+distinct image URL literals: 171
+unique origins to fetch: 165  (skipped 2)
+downloaded: 45  cached: 118  failed: 2
+files rewritten: 46  literal replacements now pointing local: 240
+FAILED: https://laviedezee.com/wp-content/uploads/2020/09/DSC00845-1024x683.jpg ('failed', 'HTTP Error 404: File Not Found')
+FAILED: https://laviedezee.com/wp-content/uploads/2023/04/Furtuna-Skin-banner-ad-pdf-1024x512.jpg ('failed', 'HTTP Error 404: File Not Found')
+wrote tools/image-map.json and tools/image-localization-report.md

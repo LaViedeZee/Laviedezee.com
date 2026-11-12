@@ -1,0 +1,50 @@
+---
+// Category archive pages 2+ — only food-and-nutrition has a second page
+// (11 posts). Same loop and Older/Newer navigation as page 1.
+import { getCollection } from 'astro:content';
+import LoopPage from '../../../../components/LoopPage.astro';
+import { CATEGORY_DESCRIPTIONS, CATEGORY_IDS, CATEGORY_NAMES } from '../../../../consts';
+import { categoryBodyClass, dateOrder, pageCount, pageOf } from '../../../../lib/loop';
+import { collectionGraph } from '../../../../lib/rankmath';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const paths = [];
+	for (const slug of Object.keys(CATEGORY_NAMES)) {
+		const inCat = dateOrder(
+			posts.filter((p) => (p.data.categories ?? []).includes(slug)),
+		);
+		const total = pageCount(inCat);
+		for (let n = 2; n <= total; n++) {
+			paths.push({
+				params: { slug, n: String(n) },
+				props: { slug, posts: inCat, page: n, total },
+			});
+		}
+	}
+	return paths;
+}
+
+const { slug, posts, page, total } = Astro.props;
+const name = CATEGORY_NAMES[slug];
+const base = `https://laviedezee.com/category/${slug}/`;
+const pageUrl = `${base}page/${page}/`;
+---
+
+<LoopPage
+	pageTitle={`${name} Archives – La Vie de Zee`}
+	description={CATEGORY_DESCRIPTIONS[slug]}
+	bodyClass={categoryBodyClass(slug, CATEGORY_IDS[slug], page)}
+	posts={pageOf(posts, page)}
+	current={page}
+	total={total}
+	paginationBase={base}
+	paginationKind="posts-nav"
+	pageHeader={{ label: 'Category', name }}
+	jsonLd={
+		collectionGraph(
+			pageUrl,
+			`${name} Archives &ndash; Page ${page} of ${total} &ndash; La Vie de Zee`,
+		)
+	}
+/>

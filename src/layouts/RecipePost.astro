@@ -1,0 +1,145 @@
+---
+// Single-recipe layout — verbatim Elfie single structure for the Cooked
+// recipe post type: empty post-cats div, h1, NO entry-meta, the featured
+// image, then the body (the Cooked info card + ingredients/directions +
+// Recipe JSON-LD are part of the body, exactly as live — the card and
+// JSON-LD are plugin-injected at render time on WordPress and were
+// captured verbatim from the live pages). Author bio + post navigation
+// follow, as on live. No Shared Counts on recipes.
+import type { CollectionEntry } from 'astro:content';
+import AuthorBio from '../components/AuthorBio.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+
+type Recipe = CollectionEntry<'recipes'>;
+
+interface Props {
+	recipe: Recipe;
+	// Neighbors in date order: prev = older recipe, next = newer recipe.
+	prev?: Recipe;
+	next?: Recipe;
+}
+
+const { recipe, prev, next } = Astro.props;
+const { title, description, heroImage, heroAlt, wpId } = recipe.data;
+const heroW = recipe.data.heroWidth ?? 900;
+const heroH = recipe.data.heroHeight ?? 1200;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`${title} – La Vie de Zee`}
+			description={description}
+			image={heroImage}
+			extraCss={[
+				'/css/cooked-essentials.min.css',
+				'/css/cooked-icons.min.css',
+				'/css/cooked-style.min.css',
+			]}
+		/>
+	</head>
+
+	<body
+		class={`wp-singular cp_recipe-template-default single single-cp_recipe postid-${wpId} wp-custom-logo wp-embed-responsive wp-theme-elfie theme-elfie woocommerce-no-js ehf-template-elfie ehf-stylesheet-elfie layout-default woocommerce-active elementor-default elementor-kit-153`}
+	>
+		<div id="page" class="site">
+		<Header />
+		<div id="content" class="site-content">
+			<div class="container">
+				<div class="row">
+					<div id="primary" class="content-area col-lg-9 ">
+						<main id="main" class="site-main">
+							<article
+								id={`post-${wpId}`}
+								class={`post-${wpId} cp_recipe type-cp_recipe status-publish has-post-thumbnail hentry${
+									recipe.data.recipeCategory
+										? ` cp_recipe_category-${recipe.data.recipeCategory}`
+										: ''
+								}`}
+							>
+								<header class="entry-header post-header">
+									<div class="post-cats"></div>
+									<h1 class="entry-title">{title}</h1>
+								</header><!-- .entry-header -->
+
+								<div class="post-thumbnail single-thumbnail">
+									<img
+										width={heroW}
+										height={heroH}
+										src={heroImage}
+										class="attachment-elfie-900x9999 size-elfie-900x9999 wp-post-image"
+										alt={title}
+										decoding="async"
+										sizes={`(max-width: ${heroW}px) 100vw, ${heroW}px`}
+									/>
+								</div>
+
+								<div class="entry-content">
+									<slot />
+								</div><!-- .entry-content -->
+							</article>
+
+							<AuthorBio />
+
+							{
+								(prev || next) && (
+									<nav class="navigation post-navigation" role="navigation">
+										<h2 class="screen-reader-text">Post navigation</h2>
+										<div class="nav-links">
+											{prev && (
+												<div class="nav-previous has-thumb">
+													<div class="post-nav-label">Previous article</div>
+													<div class="v-align">
+														<img
+															width="150"
+															height="150"
+															src={prev.data.thumb150 ?? prev.data.heroImage}
+															class="attachment-thumbnail size-thumbnail wp-post-image"
+															alt={prev.data.heroAlt ?? prev.data.title}
+															decoding="async"
+															sizes="(max-width: 150px) 100vw, 150px"
+														/>
+														<a href={`/recipes/${prev.id}/`} rel="prev">
+															<h4>{prev.data.title}</h4>
+														</a>
+													</div>
+												</div>
+											)}
+											{next && (
+												<div class="nav-next has-thumb">
+													<div class="post-nav-label">Next article</div>
+													<div class="v-align">
+														<a href={`/recipes/${next.id}/`} rel="next">
+															<h4>{next.data.title}</h4>
+														</a>
+														<img
+															width="150"
+															height="150"
+															src={next.data.thumb150 ?? next.data.heroImage}
+															class="attachment-thumbnail size-thumbnail wp-post-image"
+															alt={next.data.heroAlt ?? next.data.title}
+															decoding="async"
+															sizes="(max-width: 150px) 100vw, 150px"
+														/>
+													</div>
+												</div>
+											)}
+										</div>
+									</nav>
+								)
+							}
+						</main><!-- #main -->
+					</div><!-- #primary -->
+
+					<Sidebar />
+				</div><!-- .row -->
+			</div><!-- .container -->
+		</div><!-- #content -->
+
+		<Footer />
+		</div><!-- #page -->
+	</body>
+</html>

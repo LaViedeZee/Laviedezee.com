@@ -1,0 +1,50 @@
+# La Vie de Zee
+
+> La Vie de Zee is a faith-led (Christian framework) Wellness Stewardship system for women: an AI-powered, self-directed wellness coaching system. Fitness is service and devotion, not vanity. The framework is Wellness Stewardship — vision alignment, action plans, tracking, and education across five pillars: spiritual, physical, social, emotional, and intellectual.
+
+## Key pages
+
+- [Home](https://laviedezee.com/): Christian wellness coaching for women. Curate your own wellness lifestyle.
+- [Journal](https://laviedezee.com/blog/): Articles on fitness, food and nutrition, clean beauty, and wellness culture.
+- [Shop Wellness](https://laviedezee.com/shop/): Curated wellness products (food and nutrition, clean beauty, fitness, home). Shop links coming soon.
+- [About](https://laviedezee.com/about-me/): About La Vie de Zee and its five pillars of wellness.
+- [Work With Me](https://laviedezee.com/work-with-me/): Wellness coaching and partnerships.
+- [Contact](https://laviedezee.com/contact-me/): Business inquiries.
+- [The NYC Events Newsletter](https://laviedezee.substack.com/): Weekly New York City events newsletter on Substack ($16/month from November 16, 2026; free issues monthly).
+
+## Pages
+
+- [wellness-os-page-draft](https://laviedezee.com/wellness-os-page-draft/): Wellness Stewardship by La Vie de Zee — the Wellness Operating System.
+- [The Definitive Miami Wellness Guide | BE by La Vie de Zee](https://laviedezee.com/miami-wellness-guide/): The Best Miami Wellness Spaces by Neighborhood (updated September 2026).
+- [Social Media Strategy Portfolio](https://laviedezee.com/social-media-strategy-portfolio/): Social media strategy portfolio — recent work examples.
+- [wellness-os-confirmation-page](https://laviedezee.com/wellness-os-confirmation-page/): Wellness Operating System access confirmation page.
+- [wellness-operating-system-landing-page](https://laviedezee.com/wellness-operating-system-landing-page/): The La Vie de Zee Wellness Operating System landing page.
+- [The La Vie de Zee Wellness Library](https://laviedezee.com/the-la-vie-de-zee-wellness-library/): Wellness Continuing Education — curated resources and courses.
+- [The Definitive Miami Recovery Guide | BE by La Vie de Zee](https://laviedezee.com/miami-recovery-guide-wellness/): The Definitive Miami Recovery Guide — recovery spaces and services.
+- [The Definitive Miami Clean Beauty Guide | BE by La Vie de Zee](https://laviedezee.com/miami-clean-beauty-guide-wellness/): The Definitive Miami Clean Beauty Guide — clean facials, non-toxic nails, clean sunless tanning.
+- [The Definitive Miami Nutrition Guide | BE by La Vie de Zee](https://laviedezee.com/miami-nutrition-guide-wellness/): The Definitive Miami Nutrition Guide — healthy restaurants, wellness cafes, grocers, farmers markets.
+- [The Definitive Miami Fitness Guide | BE by La Vie de Zee](https://laviedezee.com/miami-fitness-guide-wellness/): The Definitive Miami Fitness Guide — the best Miami fitness studios by neighborhood.
+- [The NEST waiting page](https://laviedezee.com/the-nest-by-la-vie-de-zee/): THE NEST by La Vie de Zee — a waiting page for the preparing and the curious.
+- [Miami Events Newsletter](https://laviedezee.com/miami-events-newsletter/): Sign up for the Miami Events Newsletter.
+- [Work With Me](https://laviedezee.com/work-with-me/): Work with Azeezah — wellness coaching and partnerships.
+- [Terms and Conditions](https://laviedezee.com/terms-and-conditions/): Terms and conditions for laviedezee.com.
+- [Contact Us](https://laviedezee.com/contact-me/): Contact La Vie de Zee for business inquiries.
+- [Welcome to La Vie de Zee](https://laviedezee.com/about-me/): About La Vie de Zee and its five pillars of wellness: spiritual, physical, social, emotional, intellectual.
+
+## Latest journal articles
+
+- [Discover Top Wellness Destinations in Your City with BE by La Vie de Zee](https://laviedezee.com/discover-top-wellness-destinations-in-your-city-with-be-by-la-vie-de-zee/) (2026-07-16)
+- [Pilates Certification: What You Need To Know](https://laviedezee.com/pilates-certification-what-you-need-to-know/) (2025-10-03)
+- [Meet Colleen Wachob: co-Founder and co-CEO of mindbodygreen](https://laviedezee.com/colleen-wachob-mindbodygreen/) (2024-03-02)
+- [Padel: A Beginner’s Style Guide](https://laviedezee.com/padel-a-beginners-style-guide/) (2024-02-29)
+- [Meet Trisha Goyal: Founder and CEO of Break the Love](https://laviedezee.com/trisha-goyal/) (2024-02-19)
+- [Meet Gabriela: Founder of Miami’s Most Popular All-Girl Walking Group](https://laviedezee.com/gabriela-ayala/) (2024-01-22)
+- [Meet Michelle: The Powerhouse behind Miami Pilates Company](https://laviedezee.com/miami-pilates-company/) (2024-01-14)
+- [What’s “In” and “Out” in Wellness for 2024](https://laviedezee.com/whats-in-and-out-in-wellness-for-2024/) (2024-01-03)
+
+## Notes for AI agents
+
+- The newsletter (NYC Events Newsletter) lives on Substack at https://laviedezee.substack.com — do not look for a paywall or subscription system on this site.
+- The wellness shop is being rebuilt; product links are not yet live on /shop/.
+- Scripture quoted on this site and in the product uses the World English Bible (WEB).
+- La Vie de Zee is a faith-led wellness brand. The niche is vitality, not weight loss.

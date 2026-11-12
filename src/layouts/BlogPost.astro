@@ -1,0 +1,212 @@
+---
+// Single-post layout — verbatim Elfie single-post structure, from the
+// live site: entry-header (post-cats + h1 + entry-meta), the 900px-wide
+// featured image, Shared Counts injected first inside .entry-content
+// (the plugin's before_content spot — the block is NOT in the post body),
+// then the author bio and the prev/next post navigation with 150px
+// thumbs. No related posts, no comments, exactly as live.
+import type { CollectionEntry } from 'astro:content';
+import AuthorBio from '../components/AuthorBio.astro';
+import BaseHead from '../components/BaseHead.astro';
+import EntryMeta from '../components/EntryMeta.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import SharedCounts from '../components/SharedCounts.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { CATEGORY_NAMES, SITE_URL } from '../consts';
+
+type Post = CollectionEntry<'blog'>;
+
+interface Props {
+	post: Post;
+	// Neighbors in date order: prev = older post, next = newer post.
+	prev?: Post;
+	next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroAlt, wpId } =
+	post.data;
+const categories = post.data.categories ?? [];
+const tags = post.data.tags ?? [];
+const firstCat = categories[0];
+const catName = firstCat ? (CATEGORY_NAMES[firstCat] ?? firstCat) : undefined;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const postUrl = `https://laviedezee.com/${post.id}/`;
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description,
+	image: typeof heroImage === 'string' ? new URL(heroImage, SITE_URL).href : undefined,
+	datePublished: post.data.datePublished ?? pubDate.toISOString(),
+	...(post.data.dateModified
+		? { dateModified: post.data.dateModified }
+		: updatedDate
+			? { dateModified: updatedDate.toISOString() }
+			: {}),
+	author: { '@type': 'Person', name: 'Azeezah Goodwin', url: SITE_URL },
+	publisher: {
+		'@type': 'Organization',
+		name: 'La Vie de Zee',
+		url: SITE_URL,
+	},
+	mainEntityOfPage: canonical,
+};
+// The Elementor-built post needs the Elementor stylesheets to render its
+// verbatim markup; every post needs the Shared Counts stylesheet.
+const extraCss =
+	post.id === 'elementor-1534'
+		? [
+				'/css/shared-counts.min.css',
+				'/css/elementor-frontend.min.css',
+				'/css/elementor-kit.css',
+				'/css/post-1534.css',
+			]
+		: ['/css/shared-counts.min.css'];
+---
+
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`${title} – La Vie de Zee`}
+			description={description}
+			image={heroImage}
+			extraCss={extraCss}
+		/>
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	</head>
+
+	<body
+		class={`wp-singular post-template-default single single-post postid-${wpId} single-format-standard wp-custom-logo wp-embed-responsive wp-theme-elfie theme-elfie woocommerce-no-js ehf-template-elfie ehf-stylesheet-elfie layout-default woocommerce-active elementor-default elementor-kit-153`}
+	>
+		<div id="page" class="site">
+		<Header />
+		<div id="content" class="site-content">
+			<div class="container">
+				<div class="row">
+					<div id="primary" class="content-area col-lg-9 ">
+						<main id="main" class="site-main">
+							<article
+								id={`post-${wpId}`}
+								class={[
+									`post-${wpId}`,
+									'post',
+									'type-post',
+									'status-publish',
+									'format-standard',
+									'has-post-thumbnail',
+									'hentry',
+									...categories.map((c) => `category-${c}`),
+									...tags.map((t) => `tag-${t}`),
+								].join(' ')}
+							>
+								<header class="entry-header post-header">
+									{
+										firstCat && (
+											<div class="post-cats">
+												<span class="cat-links">
+													<a
+														href={`https://laviedezee.com/category/${firstCat}/`}
+														rel="category tag"
+													>
+														{catName}
+													</a>
+												</span>
+											</div>
+										)
+									}
+									<h1 class="entry-title">{title}</h1>
+									<EntryMeta
+										slug={post.id}
+										pubDate={pubDate}
+										datePublished={post.data.datePublished}
+										updatedDate={updatedDate}
+										dateModified={post.data.dateModified}
+									/>
+								</header><!-- .entry-header -->
+
+								<div class="post-thumbnail single-thumbnail">
+									<img
+										width={post.data.heroWidth ?? 900}
+										height={post.data.heroHeight ?? 1200}
+										src={heroImage}
+										class="attachment-elfie-900x9999 size-elfie-900x9999 wp-post-image"
+										alt={title}
+										decoding="async"
+										sizes="(max-width: 900px) 100vw, 900px"
+									/>
+								</div>
+
+								<div class="entry-content">
+									<SharedCounts
+										url={postUrl}
+										title={title}
+										heroImage={heroImage}
+										wpId={wpId}
+									/>
+									<slot />
+								</div><!-- .entry-content -->
+							</article>
+
+							<AuthorBio />
+
+							{
+								(prev || next) && (
+									<nav class="navigation post-navigation" role="navigation">
+										<h2 class="screen-reader-text">Post navigation</h2>
+										<div class="nav-links">
+											{prev && (
+												<div class="nav-previous has-thumb">
+													<div class="post-nav-label">Previous article</div>
+													<div class="v-align">
+														<img
+															width="150"
+															height="150"
+															src={prev.data.thumb150 ?? prev.data.heroImage}
+															class="attachment-thumbnail size-thumbnail wp-post-image"
+															alt={prev.data.heroAlt ?? prev.data.title}
+															decoding="async"
+															sizes="(max-width: 150px) 100vw, 150px"
+														/>
+														<a href={`/${prev.id}/`} rel="prev">
+															<h4>{prev.data.title}</h4>
+														</a>
+													</div>
+												</div>
+											)}
+											{next && (
+												<div class="nav-next has-thumb">
+													<div class="post-nav-label">Next article</div>
+													<div class="v-align">
+														<a href={`/${next.id}/`} rel="next">
+															<h4>{next.data.title}</h4>
+														</a>
+														<img
+															width="150"
+															height="150"
+															src={next.data.thumb150 ?? next.data.heroImage}
+															class="attachment-thumbnail size-thumbnail wp-post-image"
+															alt={next.data.heroAlt ?? next.data.title}
+															decoding="async"
+															sizes="(max-width: 150px) 100vw, 150px"
+														/>
+													</div>
+												</div>
+											)}
+										</div>
+									</nav>
+								)
+							}
+						</main><!-- #main -->
+					</div><!-- #primary -->
+
+					<Sidebar />
+				</div><!-- .row -->
+			</div><!-- .container -->
+		</div><!-- #content -->
+
+		<Footer />
+		</div><!-- #page -->
+	</body>
+</html>

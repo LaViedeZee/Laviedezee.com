@@ -1,0 +1,11 @@
+# Netlify build settings for laviedezee.com (Astro, fully static).
+# Deploy: connect this repo in Netlify, or `netlify deploy --prod --dir=dist`.
+# Redirects live in public/_redirects (single source of truth — also read
+# by Cloudflare Pages). Headers live in public/_headers.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

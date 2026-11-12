@@ -1,0 +1,101 @@
+---
+// One item of the Elfie posts loop for recipes, as used on the
+// /recipe-category/<slug>/ archives. Same structure as PostLoopItem
+// (first item full-width, rest list-style), but recipes have an empty
+// post-cats div, no entry-meta, and the excerpt is the recipe's
+// archiveExcerpt (the stored content's first <h2>, verbatim HTML).
+// Hero alt is the recipe title, exactly as live.
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	recipe: CollectionEntry<'recipes'>;
+	featured: boolean;
+}
+
+const { recipe, featured } = Astro.props;
+const { title, wpId, heroImage } = recipe.data;
+const cat = recipe.data.recipeCategory;
+const articleClass = [
+	`post-${wpId}`,
+	'cp_recipe',
+	'type-cp_recipe',
+	'status-publish',
+	'has-post-thumbnail',
+	'hentry',
+	...(cat ? [`cp_recipe_category-${cat}`] : []),
+	'col-md-12',
+].join(' ');
+const url = `https://laviedezee.com/recipes/${recipe.id}/`;
+const heroW = recipe.data.heroWidth ?? 900;
+const heroH = recipe.data.heroHeight ?? 1200;
+const excerpt = recipe.data.archiveExcerpt ?? `<p>${title}</p>`;
+---
+
+<article id={`post-${wpId}`} class={articleClass}>
+	{
+		featured ? (
+			<>
+				<div class="post-cats"></div>
+				<header class="entry-header post-header">
+					<h2 class="entry-title">
+						<a href={url} rel="bookmark">
+							{title}
+						</a>
+					</h2>
+				</header>
+				<a class="post-thumbnail" href={url} aria-hidden="true" tabindex="-1">
+					<img
+						width={heroW}
+						height={heroH}
+						src={heroImage}
+						class="attachment-elfie-900x9999 size-elfie-900x9999 wp-post-image"
+						alt={title}
+						decoding="async"
+						sizes="(max-width: 900px) 100vw, 900px"
+					/>
+				</a>
+				<div class="entry-content">
+					<Fragment set:html={excerpt} />
+					<a class="read-more" href={url}>
+						Continue reading
+					</a>
+				</div>
+			</>
+		) : (
+			<div class="row v-align">
+				<div class="col-md-4 col-sm-4 col-12">
+					<a class="post-thumbnail" href={url} aria-hidden="true" tabindex="-1">
+						<img
+							loading="lazy"
+							width="400"
+							height="400"
+							src={recipe.data.thumb400 ?? heroImage}
+							class="attachment-elfie-400x400 size-elfie-400x400 wp-post-image"
+							alt={title}
+							decoding="async"
+							sizes="(max-width: 400px) 100vw, 400px"
+						/>
+					</a>
+				</div>
+				<div class="col-md-8 col-sm-8 col-12">
+					<div class="content-list">
+						<div class="post-cats"></div>
+						<header class="entry-header post-header">
+							<h2 class="entry-title">
+								<a href={url} rel="bookmark">
+									{title}
+								</a>
+							</h2>
+						</header>
+						<div class="entry-content">
+							<Fragment set:html={excerpt} />
+							<a class="read-more" href={url}>
+								Continue reading
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		)
+	}
+</article>

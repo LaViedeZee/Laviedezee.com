@@ -1,0 +1,68 @@
+{
+  "downloaded": 0,
+  "cached": 0,
+  "failed": [
+    {
+      "url": "https://laviedezee.com/wp-content/uploads/2020/09/DSC00845-1024x683.jpg",
+      "error": "('failed', 'HTTP Error 404: File Not Found')"
+    },
+    {
+      "url": "https://laviedezee.com/wp-content/uploads/2023/04/Furtuna-Skin-banner-ad-pdf-1024x512.jpg",
+      "error": "('failed', 'HTTP Error 404: File Not Found')"
+    }
+  ],
+  "skipped_remote": [
+    "https://eep.io/mc-cdn-images/template_images/branding_logo_text_dark_dtp.svg",
+    "https://i0.wp.com/static.shareasale.com/image/60269/Credo_Clean_Beauty_970-x-90.gif?w=825&#038;ssl=1"
+  ],
+  "mapping": {
+    "https://laviedezee.com/wp-content/uploads/2020/09/DSC00845-1024x683.jpg": {
+      "local": "/images/2020/09/DSC00845-1024x683.jpg",
+      "status": "failed"
+    },
+    "https://laviedezee.com/wp-content/uploads/2023/04/Furtuna-Skin-banner-ad-pdf-1024x512.jpg": {
+      "local": "/images/2023/04/Furtuna-Skin-banner-ad-pdf-1024x512.jpg",
+      "status": "failed"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A2704-1-scaled.jpg": {
+      "local": "/images/2025/05/233A2704-1-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/IMG_0278-1-scaled.jpeg": {
+      "local": "/images/2025/05/IMG_0278-1-scaled.jpeg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A2690-scaled.jpg": {
+      "local": "/images/2025/05/233A2690-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A2908-scaled.jpg": {
+      "local": "/images/2025/05/233A2908-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A3024-scaled.jpg": {
+      "local": "/images/2025/05/233A3024-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A3048-scaled.jpg": {
+      "local": "/images/2025/05/233A3048-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/IMG_2386-scaled.jpeg": {
+      "local": "/images/2025/05/IMG_2386-scaled.jpeg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A2705-scaled.jpg": {
+      "local": "/images/2025/05/233A2705-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A2742-scaled.jpg": {
+      "local": "/images/2025/05/233A2742-scaled.jpg",
+      "status": "ok"
+    },
+    "https://laviedezee.com/wp-content/uploads/2025/05/233A3019-scaled.jpg": {
+      "local": "/images/2025/05/233A3019-scaled.jpg",
+      "status": "ok"
+    }
+  }
+}

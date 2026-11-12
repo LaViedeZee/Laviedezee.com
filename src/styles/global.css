@@ -1,0 +1,9 @@
+/*
+  La Vie de Zee — like-for-like port of the live WordPress site.
+  The visual system lives in the vendor stylesheets loaded by BaseHead
+  (public/css/elfie-style.css = Elfie theme, public/css/customizer.css =
+  the site's Kirki customizer overrides, public/css/fonts.css). This file
+  holds only the small additions the live templates need that no vendor
+  file provides. (Nothing at the moment — the 400x400/150x150 crops are
+  real files now, so no object-fit workaround is needed.)
+ */

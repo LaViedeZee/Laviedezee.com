@@ -1,0 +1,106 @@
+---
+// Minimal /shop/ stub — first pass only.
+// The full wellness shop (ShopMy links) is NOT built here: the ShopMy
+// decision is still pending (see HANDOFF.md). This page holds the URL,
+// states the shop is coming, and points readers at the live places
+// her recommendations already appear.
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { INSTAGRAM_URL, PINTEREST_URL, SITE_TITLE, SUBSTACK_URL } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`Shop Wellness — ${SITE_TITLE}`}
+			description="Shop our curated list of top wellness-related products. The La Vie de Zee wellness shop is being rebuilt."
+		/>
+		<style>
+			.shop-intro {
+				text-align: center;
+				padding: 1em 0 2em 0;
+			}
+			.categories {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 1rem;
+				list-style: none;
+				margin: 0 0 2em 0;
+				padding: 0;
+			}
+			.categories li {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 12px;
+				padding: 1.5em 1em;
+				text-align: center;
+				background: var(--paper);
+			}
+			.categories h3 {
+				margin: 0 0 0.3em 0;
+			}
+			.categories p {
+				margin: 0;
+				color: rgb(var(--gray));
+			}
+			.coming-soon {
+				text-align: center;
+				color: rgb(var(--gray));
+			}
+			.find-links {
+				text-align: center;
+				margin-top: 2em;
+			}
+			.find-links a {
+				margin: 0 0.5em;
+			}
+			@media (max-width: 720px) {
+				.categories {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="page" class="site">
+		<Header />
+		<main>
+			<section class="shop-intro">
+				<h1>Shop Wellness</h1>
+				<p>Shop our curated list of top wellness-related products.</p>
+			</section>
+
+			<ul class="categories">
+				<li>
+					<h3>Food &amp; Nutrition</h3>
+					<p>Food and supplements designed to nourish the body.</p>
+				</li>
+				<li>
+					<h3>Clean Beauty</h3>
+					<p>Clean products for enhancing your beauty without harmful ingredients.</p>
+				</li>
+				<li>
+					<h3>Fitness</h3>
+					<p>Tools to get your body moving and grooving.</p>
+				</li>
+				<li>
+					<h3>Home</h3>
+					<p>Non-toxic and organic products for a beautiful, healthy home.</p>
+				</li>
+			</ul>
+
+			<p class="coming-soon">
+				Shop links are coming soon — the wellness shop is being rebuilt.
+			</p>
+			<p class="find-links">
+				Meanwhile, find her latest recommendations in the{' '}
+				<a href={SUBSTACK_URL} target="_blank" rel="noopener">newsletter</a>, on{' '}
+				<a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram</a>, and on{' '}
+				<a href={PINTEREST_URL} target="_blank" rel="noopener">Pinterest</a>.
+			</p>
+		</main>
+		<Footer />
+		</div><!-- #page -->
+	</body>
+</html>

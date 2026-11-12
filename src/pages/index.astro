@@ -1,0 +1,37 @@
+---
+// Homepage, page 1 — the live site's front page: sticky posts first,
+// then the rest in date order, 10 per page, first post full-width.
+import { getCollection } from 'astro:content';
+import LoopPage from '../components/LoopPage.astro';
+import { homeBodyClass, homeOrder, pageCount, pageOf } from '../lib/loop';
+import { collectionGraph } from '../lib/rankmath';
+
+const all = homeOrder(await getCollection('blog'));
+const total = pageCount(all);
+
+// Live Rank Math meta description for the homepage.
+const HOME_DESCRIPTION =
+	'Faith-led wellness coaching for Christian women: vision, daily rhythms, and tracking woven into one stewardship practice. Start your Wellness Stewardship OS.';
+
+// Rank Math @graph (verbatim from live): the homepage's CollectionPage
+// node carries the SearchAction on the WebSite node and the "about"
+// link to the organization.
+const jsonLd = collectionGraph(
+	'https://laviedezee.com/',
+	'La Vie de Zee | Christian Wellness Coaching for Women',
+	{ searchAction: true, aboutOrg: true },
+);
+---
+
+<LoopPage
+	pageTitle="La Vie de Zee | Christian Wellness Coaching for Women"
+	description={HOME_DESCRIPTION}
+	bodyClass={homeBodyClass(1)}
+	posts={pageOf(all, 1)}
+	current={1}
+	total={total}
+	paginationBase="https://laviedezee.com/"
+	paginationKind="numbers"
+	isHome
+	jsonLd={jsonLd}
+/>

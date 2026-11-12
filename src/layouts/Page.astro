@@ -1,0 +1,102 @@
+---
+// Page layout — verbatim Elfie page structure, from the live site:
+// entry-header with the page title, the featured image when the page has
+// one (the five BE Miami guides: 900x225 banners), then the body verbatim
+// in .entry-content. The three Wellness OS pages have an EMPTY
+// entry-header on live and a slug for a title, so hideTitle renders the
+// empty header and the document title is just "– La Vie de Zee".
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { SITE_URL } from '../consts';
+
+type Props = CollectionEntry<'pages'>['data'] & {
+	hideTitle?: boolean;
+};
+
+const { title, description, pubDate, updatedDate, heroImage, heroAlt, wpId, hideTitle, seoTitle } =
+	Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const docTitle = seoTitle ?? (hideTitle ? '– La Vie de Zee' : `${title} – La Vie de Zee`);
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: hideTitle ? '' : title,
+	description: description ?? '',
+	...(pubDate ? { datePublished: pubDate.toISOString() } : {}),
+	...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
+	author: { '@type': 'Person', name: 'Azeezah Goodwin', url: SITE_URL },
+	publisher: {
+		'@type': 'Organization',
+		name: 'La Vie de Zee',
+		url: SITE_URL,
+	},
+	mainEntityOfPage: canonical,
+};
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={docTitle} description={description ?? title} image={heroImage} />
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	</head>
+
+	<body
+		class={`wp-singular page-template-default page page-id-${wpId} wp-custom-logo wp-embed-responsive wp-theme-elfie theme-elfie woocommerce-no-js ehf-template-elfie ehf-stylesheet-elfie woocommerce-active elementor-default elementor-kit-153`}
+	>
+		<div id="page" class="site">
+		<Header />
+		<div id="content" class="site-content">
+			<div class="container">
+				<div class="row">
+					<div id="primary" class="content-area col-md-9">
+						<main id="main" class="site-main">
+							<article
+								id={`post-${wpId}`}
+								class={[
+									`post-${wpId}`,
+									'page',
+									'type-page',
+									'status-publish',
+									...(heroImage ? ['has-post-thumbnail'] : []),
+									'hentry',
+								].join(' ')}
+							>
+								<header class="entry-header">
+									{!hideTitle && <h1 class="entry-title">{title}</h1>}
+								</header><!-- .entry-header -->
+
+								<div class="post-thumbnail single-thumbnail">
+									{
+										heroImage && (
+											<img
+												width="900"
+												height="225"
+												src={heroImage}
+												class="attachment-elfie-900x9999 size-elfie-900x9999 wp-post-image"
+												alt={heroAlt ?? title}
+												decoding="async"
+												sizes="(max-width: 900px) 100vw, 900px"
+											/>
+										)
+									}
+								</div>
+
+								<div class="entry-content">
+									<slot />
+								</div><!-- .entry-content -->
+							</article>
+						</main><!-- #main -->
+					</div><!-- #primary -->
+
+					<Sidebar />
+				</div><!-- .row -->
+			</div><!-- .container -->
+		</div><!-- #content -->
+
+		<Footer />
+		</div><!-- #page -->
+	</body>
+</html>

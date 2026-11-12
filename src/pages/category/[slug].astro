@@ -1,0 +1,44 @@
+---
+// Category archives, page 1 — /category/<slug>/. Pure date order (no
+// sticky bubbling), first post full-width, Older/Newer posts navigation.
+// The Spirituality archive has no posts: the theme's Nothing Found
+// section instead. Only clean-beauty and laviedezee-home carry a Rank
+// Math term meta description on live (CATEGORY_DESCRIPTIONS); the
+// other five emit no meta description tag at all.
+import { getCollection } from 'astro:content';
+import LoopPage from '../../components/LoopPage.astro';
+import { CATEGORY_DESCRIPTIONS, CATEGORY_IDS, CATEGORY_NAMES } from '../../consts';
+import { categoryBodyClass, dateOrder, pageCount, pageOf } from '../../lib/loop';
+import { collectionGraph } from '../../lib/rankmath';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return Object.keys(CATEGORY_NAMES).map((slug) => {
+		const inCat = dateOrder(
+			posts.filter((p) => (p.data.categories ?? []).includes(slug)),
+		);
+		return {
+			params: { slug },
+			props: { slug, posts: inCat, total: pageCount(inCat) },
+		};
+	});
+}
+
+const { slug, posts, total } = Astro.props;
+const name = CATEGORY_NAMES[slug];
+const base = `https://laviedezee.com/category/${slug}/`;
+---
+
+<LoopPage
+	pageTitle={`${name} Archives – La Vie de Zee`}
+	description={CATEGORY_DESCRIPTIONS[slug]}
+	bodyClass={categoryBodyClass(slug, CATEGORY_IDS[slug], 1)}
+	posts={pageOf(posts, 1)}
+	current={1}
+	total={total}
+	paginationBase={base}
+	paginationKind="posts-nav"
+	empty={posts.length === 0}
+	pageHeader={{ label: 'Category', name }}
+	jsonLd={collectionGraph(base, `${name} Archives &ndash; La Vie de Zee`)}
+/>

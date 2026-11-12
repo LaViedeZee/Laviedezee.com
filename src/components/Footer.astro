@@ -1,0 +1,27 @@
+---
+// Footer — changed Nov 10 at Azeezah's direction: the live WordPress
+// credit ("Proudly powered by WordPress | Theme: Elfie by elfWP") is
+// no longer accurate now that the site is Astro, so the footer now
+// reads "© 2026 La Vie de Zee" in visible body text instead.
+// (The live WordPress site keeps its original footer; this change is
+// Astro-build only. The customizer CSS still sets the footer white-on-
+// white, so this component overrides the text color to #404040.)
+---
+
+<footer id="colophon" class="site-footer">
+	<div class="site-info">
+		<div class="container">
+			© 2026 La Vie de Zee
+		</div>
+	</div><!-- .site-info -->
+</footer>
+
+<div class="back-to-top">
+	<i class="icon-up-open"></i>
+</div>
+
+<style>
+	.site-footer {
+		color: #404040;
+	}
+</style>

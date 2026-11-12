@@ -1,0 +1,54 @@
+---
+// Cooked recipe-category archives — /recipe-category/<slug>/. The
+// Elfie archive loop for cp_recipe posts: first recipe full-width,
+// rest list-style, no pagination (1–3 recipes per term). The
+// page-header ("Category: <span>Name</span>", plus the term
+// description for dinner) sits between the site header and #content,
+// exactly as live.
+import { getCollection } from 'astro:content';
+import LoopPage from '../../components/LoopPage.astro';
+import {
+	RECIPE_CATEGORY_DESCRIPTIONS,
+	RECIPE_CATEGORY_IDS,
+	RECIPE_CATEGORY_NAMES,
+} from '../../consts';
+import { recipeCategoryBodyClass } from '../../lib/loop';
+import { collectionGraph } from '../../lib/rankmath';
+
+export async function getStaticPaths() {
+	const recipes = await getCollection('recipes');
+	return Object.keys(RECIPE_CATEGORY_NAMES).map((slug) => {
+		const inCat = [...recipes]
+			.filter((r) => r.data.recipeCategory === slug)
+			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+		return {
+			params: { slug },
+			props: { slug, recipes: inCat },
+		};
+	});
+}
+
+const { slug, recipes } = Astro.props;
+const name = RECIPE_CATEGORY_NAMES[slug];
+const base = `https://laviedezee.com/recipe-category/${slug}/`;
+const description = RECIPE_CATEGORY_DESCRIPTIONS[slug];
+---
+
+<LoopPage
+	pageTitle={`${name} Archives – La Vie de Zee`}
+	description={description ? description.replace(/<[^>]+>/g, '') : ''}
+	bodyClass={recipeCategoryBodyClass(slug, RECIPE_CATEGORY_IDS[slug])}
+	posts={[]}
+	current={1}
+	total={1}
+	paginationBase={base}
+	paginationKind="none"
+	itemKind="recipe"
+	recipes={recipes}
+	pageHeader={{
+		label: 'Category',
+		name,
+		descriptionHtml: description,
+	}}
+	jsonLd={collectionGraph(base, `${name} Archives &ndash; La Vie de Zee`)}
+/>

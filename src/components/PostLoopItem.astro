@@ -1,0 +1,169 @@
+---
+// One item of the Elfie posts loop, as used on the homepage, the category
+// archives and the author archive. The first item on a page is full-width
+// (featured); the rest are list-style (.content-list in a .row.v-align).
+// Excerpt = the post's description (WordPress excerpt), exactly as live.
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORY_NAMES } from '../consts';
+import EntryMeta from './EntryMeta.astro';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	featured: boolean;
+	// WordPress's post_class() only adds `sticky` on the home/blog loop;
+	// category and author archives show the same sticky posts WITHOUT the
+	// class (verified against live Nov 10, 2026).
+	isHome?: boolean;
+}
+
+const { post, featured, isHome } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, wpId } =
+	post.data;
+const categories = post.data.categories ?? [];
+const tags = post.data.tags ?? [];
+const firstCat = categories[0];
+const catName = firstCat ? (CATEGORY_NAMES[firstCat] ?? firstCat) : undefined;
+const articleClass = [
+	`post-${wpId}`,
+	'post',
+	'type-post',
+	'status-publish',
+	'format-standard',
+	'has-post-thumbnail',
+	...(isHome && post.data.sticky ? ['sticky'] : []),
+	'hentry',
+	...categories.map((c) => `category-${c}`),
+	...tags.map((t) => `tag-${t}`),
+	'col-md-12',
+].join(' ');
+const url = `https://laviedezee.com/${post.id}/`;
+const heroW = post.data.heroWidth ?? 900;
+const heroH = post.data.heroHeight ?? 1200;
+---
+
+<article id={`post-${wpId}`} class={articleClass}>
+	{
+		featured ? (
+			<>
+				{firstCat && (
+					<div class="post-cats">
+						<a
+							class="first-cat post-cat"
+							href={`https://laviedezee.com/category/${firstCat}/`}
+						>
+							{catName}
+						</a>
+					</div>
+				)}
+				<header class="entry-header post-header">
+					<h2 class="entry-title">
+						<a href={url} rel="bookmark">
+							{title}
+						</a>
+					</h2>
+				</header>
+				<EntryMeta
+					slug={post.id}
+					pubDate={pubDate}
+					datePublished={post.data.datePublished}
+					updatedDate={updatedDate}
+					dateModified={post.data.dateModified}
+				/>
+				<a class="post-thumbnail" href={url} aria-hidden="true" tabindex="-1">
+					<img
+						width={heroW}
+						height={heroH}
+						src={heroImage}
+						class="attachment-elfie-900x9999 size-elfie-900x9999 wp-post-image"
+						alt={title}
+						decoding="async"
+						sizes="(max-width: 900px) 100vw, 900px"
+					/>
+				</a>
+				<div class="entry-content">
+					{
+						post.data.excerptLinkInside ? (
+							<p>
+								{description}
+								<a class="read-more" href={url}>
+									Continue reading
+								</a>
+							</p>
+						) : (
+							<>
+								<p>{description}</p>
+								<a class="read-more" href={url}>
+									Continue reading
+								</a>
+							</>
+						)
+					}
+				</div>
+			</>
+		) : (
+			<div class="row v-align">
+				<div class="col-md-4 col-sm-4 col-12">
+					<a class="post-thumbnail" href={url} aria-hidden="true" tabindex="-1">
+						<img
+							loading="lazy"
+							width="400"
+							height="400"
+							src={post.data.thumb400 ?? heroImage}
+							class="attachment-elfie-400x400 size-elfie-400x400 wp-post-image"
+							alt={title}
+							decoding="async"
+							sizes="(max-width: 400px) 100vw, 400px"
+						/>
+					</a>
+				</div>
+				<div class="col-md-8 col-sm-8 col-12">
+					<div class="content-list">
+						{firstCat && (
+							<div class="post-cats">
+								<a
+									class="first-cat post-cat"
+									href={`https://laviedezee.com/category/${firstCat}/`}
+								>
+									{catName}
+								</a>
+							</div>
+						)}
+						<header class="entry-header post-header">
+							<h2 class="entry-title">
+								<a href={url} rel="bookmark">
+									{title}
+								</a>
+							</h2>
+						</header>
+						<EntryMeta
+							slug={post.id}
+							pubDate={pubDate}
+							datePublished={post.data.datePublished}
+							updatedDate={updatedDate}
+							dateModified={post.data.dateModified}
+						/>
+						<div class="entry-content">
+							{
+								post.data.excerptLinkInside ? (
+									<p>
+										{description}
+										<a class="read-more" href={url}>
+											Continue reading
+										</a>
+									</p>
+								) : (
+									<>
+										<p>{description}</p>
+										<a class="read-more" href={url}>
+											Continue reading
+										</a>
+									</>
+								)
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		)
+	}
+</article>

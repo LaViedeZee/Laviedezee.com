@@ -1,0 +1,210 @@
+---
+// Shared shell for every posts-loop page: the homepage, the category
+// archives and the author archive. Same Elfie structure throughout:
+// #content > .container > .row > #primary (col-lg-9) + sidebar, with a
+// .posts-loop > .row of PostLoopItem entries (first one full-width).
+// The homepage paginates with numbered links; the archives with
+// Older/Newer posts navigation — exactly as live.
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from './BaseHead.astro';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+import Pagination from './Pagination.astro';
+import PostLoopItem from './PostLoopItem.astro';
+import PostsNav from './PostsNav.astro';
+import RecipeLoopItem from './RecipeLoopItem.astro';
+import Sidebar from './Sidebar.astro';
+import { SITE_TITLE, SITE_URL } from '../consts';
+
+interface Props {
+	pageTitle: string;
+	// Meta description / og:description for the archive. Undefined
+	// omits the tags (live emits no tag for the five categories
+	// without a Rank Math term description); '' emits an empty tag
+	// (live emits content="" for the breakfast recipe-category).
+	description?: string;
+	bodyClass: string;
+	posts: CollectionEntry<'blog'>[];
+	current: number;
+	total: number;
+	paginationBase: string;
+	paginationKind: 'numbers' | 'posts-nav' | 'none';
+	// True when the archive has no posts (Spirituality): renders the
+	// theme's "Nothing Found" section instead of the loop.
+	empty?: boolean;
+	// True only on the homepage: the `sticky` article class appears
+	// there and nowhere else (see PostLoopItem).
+	isHome?: boolean;
+	// The archive page-header, which sits between the site header and
+	// #content on every archive page (live): "Category: <span>Name</
+	// span>" or "Author: <span>Name</span>", with an optional
+	// .archive-description (author bio, or a term description).
+	// The homepage has no page-header.
+	pageHeader?: {
+		label: string;
+		name: string;
+		descriptionHtml?: string;
+	};
+	// Recipe archives (/recipe-category/<slug>/) loop recipes instead
+	// of posts, with RecipeLoopItem and no pagination.
+	itemKind?: 'post' | 'recipe';
+	recipes?: CollectionEntry<'recipes'>[];
+	jsonLd?: Record<string, unknown>;
+}
+
+const {
+	pageTitle,
+	description,
+	bodyClass,
+	posts,
+	current,
+	total,
+	paginationBase,
+	paginationKind,
+	empty,
+	isHome,
+	pageHeader,
+	itemKind,
+	recipes,
+	jsonLd,
+} = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={pageTitle} description={description} />
+		{
+			jsonLd && (
+				<script
+					type="application/ld+json"
+					class="rank-math-schema"
+					set:html={JSON.stringify(jsonLd)}
+				/>
+			)
+		}
+	</head>
+
+	<body class={bodyClass}>
+		<div id="page" class="site">
+		<Header isHome={isHome} />
+		{
+			isHome &&
+				current === 1 && (
+					<div id="featured-boxes" class="featured-boxes">
+						<div class="container">
+							<div class="row" />
+						</div>
+					</div>
+				)
+		}
+		{
+			pageHeader && (
+				<header class="page-header">
+					<div class="container">
+						<h1 class="page-title">
+							{pageHeader.label}: <span>{pageHeader.name}</span>
+						</h1>
+						{pageHeader.descriptionHtml && (
+							<div
+								class="archive-description"
+								set:html={pageHeader.descriptionHtml}
+							/>
+						)}
+					</div>
+				</header>
+			)
+		}
+		<div id="content" class="site-content">
+			<div class="container">
+				<div class="row">
+					<div id="primary" class="content-area col-lg-9">
+						<main id="main" class="site-main">
+							{
+								empty ? (
+									<section class="no-results not-found">
+										<header class="page-header">
+											<h1 class="page-title">Nothing Found</h1>
+										</header>
+										<div class="page-content">
+											<p>
+												It seems we can&rsquo;t find what you&rsquo;re looking for.
+												Perhaps searching can help.
+											</p>
+											<form
+												role="search"
+												method="get"
+												class="search-form"
+												action="https://laviedezee.com/"
+											>
+												<label>
+													<span class="screen-reader-text">Search for:</span>
+													<input
+														type="search"
+														class="search-field"
+														placeholder="Search &hellip;"
+														value=""
+														name="s"
+													/>
+												</label>
+												<input
+													type="submit"
+													class="search-submit"
+													value="Search"
+												/>
+											</form>
+										</div>
+									</section>
+								) : (
+									<>
+										<div class="posts-loop">
+											<div class="row">
+												{itemKind === 'recipe'
+													? (recipes ?? []).map((recipe, i) => (
+															<RecipeLoopItem
+																recipe={recipe}
+																featured={i === 0}
+															/>
+														))
+													: posts.map((post, i) => (
+															<PostLoopItem
+																post={post}
+																// The theme features the first post
+																// only on page 1 of a loop; on
+																// paged archives (home /page/2/,
+																// category /page/2/, author
+																// /page/2/) the first item is a
+																// list item — verified live Nov 10.
+																featured={i === 0 && current === 1}
+																isHome={isHome}
+															/>
+														))}
+											</div>
+										</div>
+										{paginationKind === 'numbers' ? (
+											<Pagination
+												current={current}
+												total={total}
+												base={paginationBase}
+											/>
+										) : paginationKind === 'posts-nav' ? (
+											<PostsNav
+												current={current}
+												total={total}
+												base={paginationBase}
+											/>
+										) : null}
+									</>
+								)
+							}
+						</main><!-- #main -->
+					</div><!-- #primary -->
+
+					<Sidebar />
+				</div><!-- .row -->
+			</div><!-- .container -->
+		</div><!-- #content -->
+
+		<Footer />
+		</div><!-- #page -->
+	</body>
+</html>

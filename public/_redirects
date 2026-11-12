@@ -1,0 +1,10 @@
+# Netlify / Cloudflare Pages style redirects — true 301s.
+# The same mappings live in astro.config.mjs (which emits meta-refresh
+# pages on purely static hosts). Keep both in sync.
+# Only live-verified mappings (checked Nov 10, 2026). Everything else
+# 404s on live exactly as it 404s here.
+
+/wellness-shop/  /shop/  301
+/the-nest-by-la-vie-de-zee/  /the-nest-by-la-vie-de-zee-%F0%9F%AA%BA/  301
+/tickets-order/  /  301
+/tickets-checkout/  /  301

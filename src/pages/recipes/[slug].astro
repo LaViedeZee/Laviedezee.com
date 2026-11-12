@@ -1,0 +1,31 @@
+---
+// Recipe singles: /recipes/<slug>/. Neighbors are the adjacent recipes
+// in date order (prev = older, next = newer); same-date ties break by
+// wpId, matching WordPress's adjacent-post order.
+import { getCollection, render } from 'astro:content';
+import RecipePost from '../../layouts/RecipePost.astro';
+
+export async function getStaticPaths() {
+	const recipes = await getCollection('recipes');
+	const byDate = [...recipes].sort(
+		(a, b) =>
+			b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+			(b.data.wpId ?? 0) - (a.data.wpId ?? 0),
+	);
+	return byDate.map((recipe, i) => ({
+		params: { slug: recipe.id },
+		props: {
+			recipe,
+			prev: byDate[i + 1],
+			next: byDate[i - 1],
+		},
+	}));
+}
+
+const { recipe, prev, next } = Astro.props;
+const { Content } = await render(recipe);
+---
+
+<RecipePost recipe={recipe} prev={prev} next={next}>
+	<Content />
+</RecipePost>

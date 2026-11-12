@@ -1,0 +1,34 @@
+---
+// WordPress the_posts_navigation() output as the category and author
+// archives use it: Older posts / Newer posts, no page numbers.
+// Page 1 lives at the base URL itself; later pages at {base}page/{n}/.
+interface Props {
+	current: number;
+	total: number;
+	// Base URL of the archive, with trailing slash.
+	base: string;
+}
+
+const { current, total, base } = Astro.props;
+const pageUrl = (n: number) => (n === 1 ? base : `${base}page/${n}/`);
+---
+
+{
+	total > 1 && (
+		<nav class="navigation posts-navigation" aria-label="Posts">
+			<h2 class="screen-reader-text">Posts navigation</h2>
+			<div class="nav-links">
+				{current < total && (
+					<div class="nav-previous">
+						<a href={pageUrl(current + 1)} >Older posts</a>
+					</div>
+				)}
+				{current > 1 && (
+					<div class="nav-next">
+						<a href={pageUrl(current - 1)}>Newer posts</a>
+					</div>
+				)}
+			</div>
+		</nav>
+	)
+}

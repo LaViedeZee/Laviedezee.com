@@ -1,0 +1,348 @@
+
+---
+// Header — verbatim copy of the live WordPress header (Elfie theme,
+// menu-centered), including the parts that sit above #masthead in
+// header.php: the skip link, the top bar (Instagram icon — the only
+// visible content in it; the left column is empty on live), and the
+// empty header-image div (blog home only). The site title is an <h1>
+// on the homepage and a <p> everywhere else, exactly like WordPress.
+// The logo <img> carries sizes="(max-width: 500px) 100vw, 500px" on
+// every page; fetchpriority="high" on every page EXCEPT the front
+// page "/" (live's logo has fetchpriority on ~30 of 41 pages but not
+// on "/" — an inconsistent WP render-time/cache artifact; "/" is
+// matched exactly and the majority rule is used elsewhere).
+// The logo link carries aria-current="page" only on "/". The current
+// menu item's link also carries aria-current="page" (WordPress adds
+// it to the current page's menu link).
+// The menu marks the current page (WP's current-menu-item /
+// current-menu-ancestor / current-menu-parent classes), derived from
+// Astro.url.pathname — only the 8 pages in the menu can match.
+// The inline script replicates the Elfie theme's mobile-menu JS
+// (custom.min.js) in vanilla JS: below 1024px the nav becomes the
+// off-canvas #mobile-navigation panel.
+interface Props {
+	isHome?: boolean;
+}
+const { isHome = false } = Astro.props;
+// The front page (pathname "/") is not the same as a home-loop page:
+// the site title is <h1> and the header-image div shows on every
+// home-loop page (p1–p4), but the logo's aria-current="page" and the
+// absence of fetchpriority="high" apply ONLY to "/" (live has
+// fetchpriority on the logo on /page/2/ but not on /, and
+// aria-current only on /).
+const isFrontPage = Astro.url.pathname === '/';
+
+// Menu items that can be "current", keyed by path: the menu-item id,
+// the page's wpId (for page-item-{id}), and the ancestor menu items.
+const MENU_CURRENT: Record<string, { item: number; page: number; ancestors: number[] }> = {
+	'/about-me/': { item: 289, page: 2, ancestors: [] },
+	'/miami-fitness-guide-wellness/': { item: 6257, page: 5345, ancestors: [6007, 6251] },
+	'/miami-nutrition-guide-wellness/': { item: 6222, page: 5429, ancestors: [6007, 6251] },
+	'/miami-clean-beauty-guide-wellness/': { item: 6338, page: 6296, ancestors: [6007, 6251] },
+	'/miami-recovery-guide-wellness/': { item: 6458, page: 6394, ancestors: [6007, 6251] },
+	'/miami-wellness-guide/': { item: 6549, page: 6530, ancestors: [6007, 6251] },
+	'/terms-and-conditions/': { item: 287, page: 102, ancestors: [] },
+	'/contact-me/': { item: 288, page: 73, ancestors: [] },
+};
+const current = MENU_CURRENT[Astro.url.pathname];
+const isCurrent = (item: number) => current?.item === item;
+const isAncestor = (item: number) => current?.ancestors.includes(item) ?? false;
+// WordPress inserts the current-* classes in a fixed position inside
+// the class list; replicate the order exactly (verified Nov 10).
+const pageItemClass = (item: number, base: string) =>
+	isCurrent(item)
+		? base.replace(
+				'menu-item-object-page',
+				`menu-item-object-page current-menu-item page_item page-item-${current!.page} current_page_item`,
+			)
+		: base;
+const customItemClass = (item: number, base: string) => {
+	if (!isAncestor(item)) return base;
+	// 6251 (Miami) is the direct parent of the current guide page;
+	// 6007 (BE Guides) is the grandparent.
+	const extra = item === 6251 ? 'current-menu-ancestor current-menu-parent' : 'current-menu-ancestor';
+	return base.replace('menu-item-object-custom', `menu-item-object-custom ${extra}`);
+};
+---
+
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+<div class="top-bar">
+	<div class="container">
+		<div class="row v-align">
+			<div class="col-md-8">
+			</div>
+			<div class="col-md-4">
+				<div class="header-social">
+					<div class="social-item">
+						<a target="_blank" href="https://www.instagram.com/laviedezee">
+							<i class="icon-instagram"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{
+	isHome && (
+		<div class="header-image">
+			<div class="fullwidth" />
+		</div>
+	)
+}
+
+<header id="masthead" class="site-header menu-centered">
+	<div class="site-header-inner">
+		<div class="container">
+			<div class="site-branding">
+				<a
+					href="/"
+					class="custom-logo-link"
+					rel="home"
+					aria-current={isFrontPage ? 'page' : undefined}
+				>
+					<img
+						width="500"
+						height="500"
+						src="/images/2020/08/L.png"
+						class="custom-logo"
+						alt="La Vie de Zee"
+						decoding="async"
+						sizes="(max-width: 500px) 100vw, 500px"
+						fetchpriority={isFrontPage ? undefined : 'high'}
+					/>
+				</a>
+				{
+					isHome ? (
+						<h1 class="site-title">
+							<a href="/" rel="home">La Vie de Zee</a>
+						</h1>
+					) : (
+						<p class="site-title">
+							<a href="/" rel="home">La Vie de Zee</a>
+						</p>
+					)
+				}
+				<p class="site-description">since 2020</p>
+			</div><!-- .site-branding -->
+			<button
+				class="menu-toggle"
+				tabindex="0"
+				aria-controls="primary-menu"
+				aria-expanded="false"
+			>
+				<i class="icon-menu"></i>
+			</button>
+			<nav id="site-navigation" class="main-navigation">
+				<button
+					class="menu-close-button"
+					tabindex="0"
+					aria-controls="primary-menu"
+					aria-expanded="false"
+				>
+					<i class="icon-cancel"></i>
+				</button>
+				<div class="menu-main-la-vie-de-zee-menu-container">
+					<ul id="primary-menu" class="primary-menu">
+						<li
+							id="menu-item-289"
+							class={pageItemClass(
+								289,
+								'menu-item menu-item-type-post_type menu-item-object-page menu-item-289',
+							)}
+						>
+							<a href="/about-me/" aria-current={isCurrent(289) ? 'page' : undefined}>About</a>
+						</li>
+						<li
+							id="menu-item-6007"
+							class={customItemClass(
+								6007,
+								'menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-6007',
+							)}
+						>
+							<a>BE by LVDZ Guides</a>
+							<ul class="sub-menu">
+								<li
+									id="menu-item-6251"
+									class={customItemClass(
+										6251,
+										'menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-6251',
+									)}
+								>
+									<a href="#">Miami</a>
+									<ul class="sub-menu">
+										<li
+											id="menu-item-6257"
+											class={pageItemClass(
+												6257,
+												'menu-item menu-item-type-post_type menu-item-object-page menu-item-6257',
+											)}
+										>
+											<a href="/miami-fitness-guide-wellness/" aria-current={isCurrent(6257) ? 'page' : undefined}>Fitness</a>
+										</li>
+										<li
+											id="menu-item-6222"
+											class={pageItemClass(
+												6222,
+												'menu-item menu-item-type-post_type menu-item-object-page menu-item-6222',
+											)}
+										>
+											<a href="/miami-nutrition-guide-wellness/" aria-current={isCurrent(6222) ? 'page' : undefined}>Nutrition</a>
+										</li>
+										<li
+											id="menu-item-6338"
+											class={pageItemClass(
+												6338,
+												'menu-item menu-item-type-post_type menu-item-object-page menu-item-6338',
+											)}
+										>
+											<a href="/miami-clean-beauty-guide-wellness/" aria-current={isCurrent(6338) ? 'page' : undefined}>Clean Beauty</a>
+										</li>
+										<li
+											id="menu-item-6458"
+											class={pageItemClass(
+												6458,
+												'menu-item menu-item-type-post_type menu-item-object-page menu-item-6458',
+											)}
+										>
+											<a href="/miami-recovery-guide-wellness/" aria-current={isCurrent(6458) ? 'page' : undefined}>Recovery</a>
+										</li>
+										<li
+											id="menu-item-6549"
+											class={pageItemClass(
+												6549,
+												'menu-item menu-item-type-post_type menu-item-object-page menu-item-6549',
+											)}
+										>
+											<a href="/miami-wellness-guide/" aria-current={isCurrent(6549) ? 'page' : undefined}>Wellness</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li
+							id="menu-item-287"
+							class={pageItemClass(
+								287,
+								'menu-item menu-item-type-post_type menu-item-object-page menu-item-287',
+							)}
+						>
+							<a href="/terms-and-conditions/" aria-current={isCurrent(287) ? 'page' : undefined}>T &amp; C</a>
+						</li>
+						<li
+							id="menu-item-288"
+							class={pageItemClass(
+								288,
+								'menu-item menu-item-type-post_type menu-item-object-page menu-item-288',
+							)}
+						>
+							<a href="/contact-me/" aria-current={isCurrent(288) ? 'page' : undefined}>Contact</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+</header>
+<script>
+	// Elfie mobile menu, ported from the theme's custom.min.js (no jQuery).
+	(function () {
+		var mode = 'desktop';
+		var mq = window.matchMedia('only screen and (max-width: 1024px)');
+		function navEl() {
+			return document.getElementById('site-navigation') || document.getElementById('mobile-navigation');
+		}
+		function toMobile() {
+			var masthead = document.getElementById('masthead');
+			var nav = document.getElementById('site-navigation');
+			if (!nav) return;
+			nav.id = 'mobile-navigation';
+			nav.querySelectorAll('li:has(ul)').forEach(function (li) {
+				li.classList.add('has-submenu');
+				if (!li.querySelector(':scope > .submenu-toggle')) {
+					var a = li.querySelector(':scope > a');
+					var span = document.createElement('span');
+					span.className = 'submenu-toggle';
+					span.innerHTML = '<a href="#">+</a>';
+					a.after(span);
+				}
+			});
+			var top = masthead ? masthead.offsetHeight - 20 : 0;
+			var ul = nav.querySelector(':scope > div > ul');
+			if (ul) ul.style.top = top + 'px';
+		}
+		function toDesktop() {
+			var nav = document.getElementById('mobile-navigation');
+			if (!nav) return;
+			nav.id = 'site-navigation';
+			nav.removeAttribute('style');
+			var ul = nav.querySelector(':scope > div > ul');
+			if (ul) ul.removeAttribute('style');
+			nav.querySelectorAll('.submenu-toggle').forEach(function (t) {
+				t.remove();
+			});
+			nav.querySelectorAll('.submenu').forEach(function (s) {
+				s.removeAttribute('style');
+			});
+		}
+		function apply() {
+			var next = mq.matches ? 'mobile' : 'desktop';
+			if (next === mode) return;
+			mode = next;
+			if (mode === 'mobile') toMobile();
+			else toDesktop();
+		}
+		window.addEventListener('load', apply);
+		window.addEventListener('resize', apply);
+		apply();
+		document.querySelector('.menu-toggle').addEventListener('click', function () {
+			this.classList.toggle('active');
+			var nav = navEl();
+			if (nav) nav.classList.toggle('active');
+		});
+		document.querySelector('.menu-close-button').addEventListener('click', function () {
+			var nav = navEl();
+			if (nav) nav.classList.remove('active');
+		});
+		document.addEventListener('click', function (e) {
+			var toggle = e.target.closest('#mobile-navigation li .submenu-toggle');
+			if (!toggle) return;
+			e.preventDefault();
+			toggle.textContent = toggle.textContent === '+' ? '-' : '+';
+			toggle.classList.toggle('active');
+			var sub = toggle.nextElementSibling;
+			if (sub && sub.tagName === 'UL') {
+				sub.style.display = sub.style.display === 'block' ? '' : 'block';
+			}
+			e.stopImmediatePropagation();
+		});
+		// Keyboard focus trap, as in the theme.
+		var closeBtn = document.querySelector('.menu-close-button');
+		var menu = document.querySelector('.primary-menu');
+		if (closeBtn && menu) {
+			var items = menu.querySelectorAll('li');
+			var first = items[0];
+			var last = items[items.length - 1];
+			last.addEventListener('keydown', function (e) {
+				if (e.which === 9 && !e.shiftKey) {
+					e.preventDefault();
+					closeBtn.focus();
+				}
+			});
+			first.addEventListener('keydown', function (e) {
+				if (e.which === 9 && e.shiftKey) {
+					e.preventDefault();
+					closeBtn.focus();
+				}
+			});
+			closeBtn.addEventListener('keydown', function (e) {
+				if (e.which === 9 && e.shiftKey) {
+					e.preventDefault();
+					last.querySelector('a').focus();
+				}
+			});
+		}
+	})();
+</script>

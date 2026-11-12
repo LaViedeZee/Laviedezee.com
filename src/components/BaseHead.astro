@@ -1,0 +1,74 @@
+---
+// Import the global.css file here so that it is included on
+// all pages through the use of the <BaseHead /> component.
+import '../styles/global.css';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+	// Full <title> text, exactly as the live site renders it
+	// (Rank Math title, e.g. "Padel: A Beginner's Style Guide – La Vie de Zee").
+	title: string;
+	// Meta description / og:description. Omit the tags entirely when
+	// undefined (live emits no tag for the five categories without a
+	// Rank Math term description); emit an EMPTY tag when '' (live
+	// emits content="" for the breakfast recipe-category archive).
+	description?: string;
+	image?: string;
+	// Extra stylesheets for this page only (post pages: shared-counts;
+	// the Elementor post: elementor stack).
+	extraCss?: string[];
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const { title, description, image, extraCss = [] } = Astro.props;
+// heroImage is a plain string: a public-dir path ("/images/...") for
+// localized images. og:image needs an absolute URL.
+const ogImage = image
+	? image.startsWith('http')
+		? image
+		: new URL(image, Astro.site).href
+	: new URL('/images/2020/08/L.png', Astro.site).href;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/png" href="/images/2020/08/L.png" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title={SITE_TITLE}
+	href={new URL('rss.xml', Astro.site)}
+/>
+<meta name="generator" content={Astro.generator} />
+
+<!-- Styles: the live site's own stylesheets, self-hosted, in cascade order.
+     fonts.css (@font-face) -> bootstrap grid -> Elfie theme ->
+     WP block library -> Kirki customizer overrides -> Substack card. -->
+<link rel="stylesheet" href="/css/fonts.css" />
+<link rel="stylesheet" href="/css/bootstrap-grid.min.css" />
+<link rel="stylesheet" href="/css/elfie-style.css" />
+<link rel="stylesheet" href="/css/block-library.min.css" />
+<link rel="stylesheet" href="/css/customizer.css" />
+<link rel="stylesheet" href="/css/substack-card.css" />
+{extraCss.map((href) => <link rel="stylesheet" href={href} />)}
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+{description !== undefined && <meta name="description" content={description} />}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+{description !== undefined && <meta property="og:description" content={description} />}
+<meta property="og:image" content={ogImage} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />

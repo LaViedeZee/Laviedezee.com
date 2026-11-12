@@ -1,0 +1,31 @@
+---
+// Elementor canvas landing page: "Event Partnership Advisory Services".
+// The live page uses the Elementor canvas template — no site header,
+// footer or sidebar, just the Elementor markup full-screen. The markup
+// was captured verbatim from the live page (images localized); the page
+// needs the Elementor stylesheets + its own post-3320 CSS to render.
+import BaseHead from '../components/BaseHead.astro';
+import landingHtml from '../content/landing/event-partnership-advisory-services.html?raw';
+---
+
+<html lang="en">
+	<head>
+		<BaseHead
+			title="Event Partnership Advisory Services – La Vie de Zee"
+			description="Learn how to successfully pitch event partnerships in collaboration with aligned brands."
+			extraCss={[
+				'/css/elementor-frontend.min.css',
+				'/css/elementor-kit.css',
+				'/css/widget-image.min.css',
+				'/css/widget-heading.min.css',
+				'/css/post-3320.css',
+			]}
+		/>
+	</head>
+
+	<body
+		class="wp-singular e-landing-page-template e-landing-page-template-elementor_canvas single single-e-landing-page postid-3320 single-format-standard wp-custom-logo wp-embed-responsive wp-theme-elfie theme-elfie woocommerce-no-js ehf-template-elfie ehf-stylesheet-elfie layout-default woocommerce-active elementor-default elementor-template-canvas elementor-kit-153 elementor-page elementor-page-3320"
+	>
+		<Fragment set:html={landingHtml} />
+	</body>
+</html>

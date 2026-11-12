@@ -1,0 +1,30 @@
+---
+// Author archive, page 1 — /author/laviedezee/. All 36 posts in pure
+// date order, first post full-width, Older/Newer posts navigation.
+// Live document title is just her name.
+import { getCollection } from 'astro:content';
+import LoopPage from '../../components/LoopPage.astro';
+import { AUTHOR_DESCRIPTION_HTML } from '../../consts';
+import { authorBodyClass, dateOrder, pageCount, pageOf } from '../../lib/loop';
+import { authorGraph } from '../../lib/rankmath';
+
+const all = dateOrder(await getCollection('blog'));
+const total = pageCount(all);
+---
+
+<LoopPage
+	pageTitle="Azeezah Goodwin"
+	description="Azeezah Goodwin: Founder of La Vie de Zee, The Miami Events Newsletter, The NYC Events Newsletter and social media influencer (@azeezahgoodwin)."
+	bodyClass={authorBodyClass(1)}
+	posts={pageOf(all, 1)}
+	current={1}
+	total={total}
+	paginationBase="https://laviedezee.com/author/laviedezee/"
+	paginationKind="posts-nav"
+	pageHeader={{
+		label: 'Author',
+		name: 'Azeezah Goodwin',
+		descriptionHtml: AUTHOR_DESCRIPTION_HTML,
+	}}
+	jsonLd={authorGraph('https://laviedezee.com/author/laviedezee/')}
+/>

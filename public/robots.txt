@@ -1,0 +1,31 @@
+# robots.txt for laviedezee.com
+# AI search crawlers are explicitly allowed: this site wants to be found
+# and cited by ChatGPT Search, Perplexity, Claude, and other AI agents.
+# (Google-Extended is Google's AI-training crawler; allowing it is a
+# deliberate choice — remove that block if the owner prefers to opt out.)
+
+User-agent: *
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://laviedezee.com/sitemap-index.xml

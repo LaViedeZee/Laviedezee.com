@@ -1,0 +1,49 @@
+---
+// Event JSON-LD (schema.org) — wire this into a page once the site lists a
+// real public event. Do NOT publish it with placeholder data: misleading
+// structured data can get a site penalised in search.
+// Example (real event, featured in the Nov 9, 2026 newsletter):
+//   <EventJsonLd
+//     name="NYC Transplants!"
+//     startDate="2026-11-15T13:00:00-05:00"
+//     endDate="2026-11-15T17:00:00-05:00"
+//     locationName="Elizabeth Street Garden"
+//     locationAddress="Elizabeth St, New York, NY 10012"
+//     description="A free afternoon for New York transplants to meet, in Nolita."
+//     url="https://luma.com/am1ja6xd"
+//     organizerName="Kahani"
+//   />
+interface Props {
+	name: string;
+	startDate: string;
+	endDate?: string;
+	locationName: string;
+	locationAddress?: string;
+	description: string;
+	url?: string;
+	organizerName?: string;
+	image?: string;
+}
+
+const { name, startDate, endDate, locationName, locationAddress, description, url, organizerName, image } =
+	Astro.props;
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Event',
+	name,
+	startDate,
+	...(endDate ? { endDate } : {}),
+	location: {
+		'@type': 'Place',
+		name: locationName,
+		...(locationAddress ? { address: locationAddress } : {}),
+	},
+	description,
+	...(url ? { url } : {}),
+	...(organizerName ? { organizer: { '@type': 'Organization', name: organizerName } } : {}),
+	...(image ? { image } : {}),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

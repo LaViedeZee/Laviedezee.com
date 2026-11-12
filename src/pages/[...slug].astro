@@ -1,0 +1,72 @@
+---
+// Root routing: every converted WordPress post and page keeps the exact
+// slug it had on WordPress, served at /<slug>/ — no /blog/ prefix on
+// posts. The Blog page itself (wpId 283) is served at /blog/ from
+// src/content/pages/blog.md. The three Wellness OS pages keep their
+// empty entry-header (hideTitle) exactly as live.
+import { getCollection, render } from 'astro:content';
+import BlogPost from '../layouts/BlogPost.astro';
+import Page from '../layouts/Page.astro';
+
+const OS_SLUGS = new Set([
+	'wellness-operating-system-landing-page',
+	'wellness-os-page-draft',
+	'wellness-os-confirmation-page',
+]);
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const pages = await getCollection('pages');
+	// Neighbors for the post navigation: pure date order (prev = older,
+	// next = newer). Sticky does NOT affect adjacent-post links.
+	const byDate = [...posts].sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+	const neighbors = new Map(
+		byDate.map((post, i) => [
+			post.id,
+			{
+				prev: byDate[i + 1],
+				next: byDate[i - 1],
+			},
+		]),
+	);
+	// The NEST page's WordPress slug carries a 🪺 emoji; Astro's content
+	// loader strips it from the entry id, so the route slug is restored
+	// here to match the live URL exactly.
+	const routeSlug = (id: string) =>
+		id === 'the-nest-by-la-vie-de-zee-'
+			? 'the-nest-by-la-vie-de-zee-🪺'
+			: id;
+	return [
+		...posts.map((post) => ({
+			params: { slug: post.id },
+			props: {
+				entry: post,
+				kind: 'post' as const,
+				prev: neighbors.get(post.id)?.prev,
+				next: neighbors.get(post.id)?.next,
+			},
+		})),
+		...pages.map((page) => ({
+			params: { slug: routeSlug(page.id) },
+			props: { entry: page, kind: 'page' as const },
+		})),
+	];
+}
+
+const { entry, kind, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+{
+	kind === 'post' ? (
+		<BlogPost post={entry} prev={prev} next={next}>
+			<Content />
+		</BlogPost>
+	) : (
+		<Page {...entry.data} hideTitle={OS_SLUGS.has(entry.id)}>
+			<Content />
+		</Page>
+	)
+}

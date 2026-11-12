@@ -1,0 +1,133 @@
+---
+// Sidebar — verbatim copy of the live WordPress sidebar (#secondary),
+// same five widgets in the same order. The Substack card lists the
+// three latest Substack posts as of Nov 10, 2026 (a static snapshot —
+// the live card updates when new issues publish; see HANDOFF).
+// NOTE: the search form posts to /?s=... like the live form; a static
+// site has no search backend (see HANDOFF).
+---
+
+<aside id="secondary" class="widget-area col-lg-3">
+	<section id="block-17" class="widget widget_block">
+		<h5 class="wp-block-heading"><em>Welcome to La Vie de Zee. </em></h5>
+	</section>
+	<section id="search-2" class="widget widget_search">
+		<form role="search" method="get" class="search-form" action="https://laviedezee.com/">
+			<label>
+				<span class="screen-reader-text">Search for:</span>
+				<input
+					type="search"
+					class="search-field"
+					placeholder="Search …"
+					value=""
+					name="s"
+				/>
+			</label>
+			<input type="submit" class="search-submit" value="Search" />
+		</form>
+	</section>
+	<section id="block-19" class="widget widget_block widget_media_image">
+		<figure class="wp-block-image size-large">
+			<a href="/wellness-operating-system-landing-page/">
+				<img
+					fetchpriority="high"
+					decoding="async"
+					width="791"
+					height="1024"
+					src="/images/2026/08/Wellness-Stewardship-Downloadable.png"
+					alt=""
+					class="wp-image-6473"
+				/>
+			</a>
+		</figure>
+	</section>
+	<section id="block-21" class="widget widget_block">
+		<h6 class="wp-block-heading has-text-align-center">
+			<a href="/wellness-operating-system-landing-page/">
+				Access your Wellness Stewardship Operating System. Faith-based and customizable.
+			</a>
+		</h6>
+	</section>
+	<section id="block-10" class="widget widget_block">
+		<div class="wp-widget-group__inner-blocks">
+			<p>
+				<aside class="sidebar-substack-card" aria-label="Latest from Substack">
+					<div class="sidebar-substack-heading">
+						<h3>Latest from Substack</h3>
+					</div>
+					<div class="sidebar-substack-posts">
+						<ul>
+							<li>
+								<a
+									href="https://laviedezee.substack.com/p/the-nyc-events-newsletter-713"
+									target="_blank"
+									rel="noopener"
+								>
+									<img
+										decoding="async"
+										class="sidebar-substack-thumb"
+										src="/images/substack-nyc-events-thumb.png"
+										alt=""
+										loading="lazy"
+									/>
+									<span class="sidebar-substack-post-title">
+										The NYC Events Newsletter 🗽
+									</span>
+									<span class="sidebar-substack-post-date">Nov 9, 2026</span>
+								</a>
+							</li>
+							<li>
+								<a
+									href="https://laviedezee.substack.com/p/the-nyc-events-newsletter-f9d"
+									target="_blank"
+									rel="noopener"
+								>
+									<img
+										decoding="async"
+										class="sidebar-substack-thumb"
+										src="/images/substack-nyc-events-thumb.png"
+										alt=""
+										loading="lazy"
+									/>
+									<span class="sidebar-substack-post-title">
+										The NYC Events Newsletter 🗽
+									</span>
+									<span class="sidebar-substack-post-date">Nov 2, 2026</span>
+								</a>
+							</li>
+							<li>
+								<a
+									href="https://laviedezee.substack.com/p/the-nyc-events-newsletter-bc7"
+									target="_blank"
+									rel="noopener"
+								>
+									<img
+										decoding="async"
+										class="sidebar-substack-thumb"
+										src="/images/substack-nyc-events-thumb.png"
+										alt=""
+										loading="lazy"
+									/>
+									<span class="sidebar-substack-post-title">
+										The NYC Events Newsletter 🗽
+									</span>
+									<span class="sidebar-substack-post-date">Oct 26, 2026</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="sidebar-substack-footer">
+						<a
+							class="sidebar-substack-link"
+							href="https://laviedezee.substack.com"
+							target="_blank"
+							rel="noopener"
+						>
+							Read the journal <span aria-hidden="true">↗</span>
+						</a>
+					</div>
+				</aside>
+			</p>
+		</div>
+	</section>
+</aside>
